@@ -1,0 +1,1072 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Motivation Platform</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+/* ============================
+   HIGH-ENERGY DARK MODE STYLE
+   ============================ */
+
+:root {
+  --primary: #06b6d4;
+  --primary-dark: #0891b2;
+  --primary-glow: rgba(6,182,212,0.4);
+  --secondary: #ec4899;
+  --secondary-dark: #db2777;
+  --secondary-glow: rgba(236,72,153,0.35);
+  --accent: #8b5cf6;
+  --accent-glow: rgba(139,92,246,0.3);
+  --bg: #09090b;
+  --bg-card: #18181b;
+  --bg-elevated: #27272a;
+  --text: #fafafa;
+  --text-secondary: #a1a1aa;
+  --border: #3f3f46;
+  --border-hover: #52525b;
+  --success: #22c55e;
+  --shadow: 0 4px 24px rgba(0,0,0,0.4);
+  --shadow-glow: 0 8px 32px rgba(6,182,212,0.2);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Montserrat", sans-serif;
+  background: radial-gradient(ellipse at top, #18181b 0%, #09090b 70%);
+  background-attachment: fixed;
+  color: var(--text);
+  margin: 0;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+  line-height: 1.6;
+}
+
+/* Animated background effect */
+body::before {
+  content: "";
+  position: fixed;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, var(--primary-glow) 0%, transparent 50%);
+  animation: rotate 30s linear infinite;
+  pointer-events: none;
+  opacity: 0.15;
+  z-index: 0;
+}
+
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Containers */
+.container {
+  max-width: 720px;
+  width: 100%;
+  position: relative;
+  z-index: 1;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 40px;
+  animation: fadeInDown 0.6s ease-out;
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Cards */
+.card {
+  background: var(--bg-card);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--border);
+  padding: 32px;
+  margin-bottom: 28px;
+  border-radius: 20px;
+  box-shadow: var(--shadow);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: fadeInUp 0.6s ease-out backwards;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.card:nth-child(2) { animation-delay: 0.1s; }
+.card:nth-child(3) { animation-delay: 0.2s; }
+.card:nth-child(4) { animation-delay: 0.3s; }
+.card:nth-child(5) { animation-delay: 0.4s; }
+
+.card:hover {
+  border-color: var(--primary);
+  box-shadow: var(--shadow-glow);
+  transform: translateY(-4px);
+}
+
+/* Headings */
+h1 {
+  font-size: 3em;
+  margin: 0 0 8px 0;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 50%, var(--secondary) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradient 8s ease infinite;
+  background-size: 200% 200%;
+}
+
+@keyframes gradient {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+h2 {
+  margin: 0 0 24px 0;
+  padding-bottom: 12px;
+  border-bottom: 3px solid;
+  border-image: linear-gradient(90deg, var(--primary), var(--secondary)) 1;
+  font-weight: 700;
+  color: var(--primary);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  font-size: 1.3em;
+}
+
+.subtitle {
+  color: var(--text-secondary);
+  margin: 0;
+  font-size: 0.95em;
+  letter-spacing: 0.5px;
+}
+
+/* Buttons */
+button {
+  font-family: "Montserrat", sans-serif;
+  cursor: pointer;
+  border-radius: 12px;
+  padding: 14px 24px;
+  border: none;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+button::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.2);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+button:hover::before {
+  width: 300px;
+  height: 300px;
+}
+
+/* Advice Section */
+#adviceText {
+  font-size: 1.2em;
+  font-style: italic;
+  color: var(--text-secondary);
+  min-height: 60px;
+  line-height: 1.8;
+  padding: 20px;
+  background: var(--bg-elevated);
+  border-radius: 12px;
+  border-left: 4px solid var(--primary);
+  margin-bottom: 20px;
+}
+
+#newAdvice {
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: var(--text);
+  box-shadow: 0 0 20px var(--primary-glow);
+  font-size: 0.95em;
+}
+
+#newAdvice:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 0 30px var(--primary-glow);
+}
+
+/* Article Cards */
+.article-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+.article-item {
+  display: flex;
+  gap: 18px;
+  padding: 16px;
+  background: var(--bg-elevated);
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  transition: all 0.3s ease;
+  text-decoration: none;
+  color: inherit;
+}
+
+.article-item:hover {
+  border-color: var(--secondary);
+  box-shadow: 0 0 24px var(--secondary-glow);
+  transform: translateX(4px);
+  background: rgba(236,72,153,0.05);
+}
+
+.article-img {
+  width: 90px;
+  height: 90px;
+  min-width: 90px;
+  border-radius: 12px;
+  object-fit: cover;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+  transition: transform 0.3s ease;
+}
+
+.article-item:hover .article-img {
+  transform: scale(1.05);
+}
+
+.article-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.article-source {
+  color: var(--primary);
+  font-size: 0.75em;
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.article-title {
+  color: var(--text);
+  margin: 0;
+  font-size: 1em;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+/* Filter Buttons */
+.media-filter {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+
+.filter-btn {
+  font-size: 0.8em;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  padding: 8px 16px;
+  font-weight: 600;
+}
+
+.filter-btn:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+  background: rgba(6,182,212,0.1);
+}
+
+.filter-btn.active {
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  color: var(--text);
+  border-color: var(--primary);
+  box-shadow: 0 0 16px var(--primary-glow);
+}
+
+/* Media Grid */
+.media-grid {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+.media-item {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  text-decoration: none;
+  color: inherit;
+}
+
+.media-item:hover {
+  transform: translateY(-6px);
+  border-color: var(--accent);
+  box-shadow: 0 8px 32px var(--accent-glow);
+}
+
+.thumbnail-wrapper {
+  position: relative;
+  width: 100%;
+  padding-top: 56.25%;
+  background: #000;
+  overflow: hidden;
+}
+
+.thumbnail-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.9;
+  transition: all 0.4s ease;
+}
+
+.media-item:hover .thumbnail-img {
+  opacity: 0.6;
+  transform: scale(1.1);
+}
+
+/* Play Icon */
+.play-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.7);
+  width: 52px;
+  height: 52px;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  border-radius: 50%;
+  opacity: 0;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 0 30px var(--primary-glow);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.play-icon::after {
+  content: "";
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  border-left: 16px solid white;
+  margin-left: 5px;
+}
+
+.media-item:hover .play-icon {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1.2);
+}
+
+.media-content {
+  padding: 16px;
+}
+
+.media-tag {
+  font-size: 0.75em;
+  font-weight: 700;
+  color: var(--secondary);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  display: inline-block;
+  margin-bottom: 8px;
+}
+
+.media-title {
+  color: var(--text);
+  font-weight: 600;
+  margin: 0;
+  font-size: 1em;
+  line-height: 1.4;
+}
+
+/* Goals Section */
+#progressContainer {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+  padding: 16px;
+  background: var(--bg-elevated);
+  border-radius: 12px;
+  border: 1px solid var(--border);
+}
+
+#progressContainer p {
+  margin: 0;
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--text-secondary);
+  font-size: 0.9em;
+}
+
+.progress-bar-wrapper {
+  flex-grow: 1;
+  height: 14px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+#progressBar {
+  width: 0%;
+  height: 100%;
+  background: linear-gradient(90deg, var(--success), var(--primary));
+  border-radius: 10px;
+  transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 0 20px rgba(34,197,94,0.4);
+}
+
+#progressPercentage {
+  font-weight: 700;
+  color: var(--success);
+  min-width: 50px;
+  text-align: right;
+  font-size: 1.1em;
+}
+
+#goalList {
+  list-style-type: none;
+  padding: 0;
+  margin: 0 0 24px 0;
+}
+
+#goalList li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 12px;
+  border-bottom: 1px solid var(--border);
+  transition: all 0.2s ease;
+  background: var(--bg-elevated);
+  margin-bottom: 8px;
+  border-radius: 10px;
+}
+
+#goalList li:hover {
+  background: var(--bg-card);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+#goalList li span {
+  flex-grow: 1;
+  position: relative;
+  transition: color 0.4s ease;
+  font-weight: 500;
+}
+
+.goal-info {
+  flex-grow: 1;
+}
+
+.goal-controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  opacity: 0.6;
+  transition: opacity 0.2s ease-in-out;
+}
+
+#goalList li:hover .goal-controls {
+  opacity: 1;
+}
+
+.progress-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 140px;
+  height: 10px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 10px;
+  outline: none;
+  transition: all 0.2s;
+  border: 1px solid var(--border);
+}
+
+.progress-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 22px;
+  height: 22px;
+  background: linear-gradient(135deg, var(--secondary), var(--secondary-dark));
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 0 12px var(--secondary-glow);
+  transition: all 0.2s;
+}
+
+.progress-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+}
+
+.progress-slider::-moz-range-thumb {
+  width: 22px;
+  height: 22px;
+  background: linear-gradient(135deg, var(--secondary), var(--secondary-dark));
+  border-radius: 50%;
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 0 12px var(--secondary-glow);
+}
+
+.progress-label {
+  font-size: 0.9em;
+  color: var(--primary);
+  font-weight: 700;
+  min-width: 45px;
+  text-align: right;
+}
+
+#goalList li span::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  height: 2px;
+  background: linear-gradient(90deg, var(--text-secondary), transparent);
+  width: 0;
+  transition: width 0.4s ease-in-out;
+}
+
+#goalList li.completed span {
+  color: var(--text-secondary);
+}
+
+#goalList li.completed span::after {
+  width: 100%;
+}
+
+#goalList .delete-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 1.6em;
+  padding: 0 12px;
+  transition: all 0.2s;
+  line-height: 1;
+}
+
+#goalList .delete-btn:hover {
+  color: var(--secondary);
+  transform: scale(1.2);
+}
+
+.goal-input-container {
+  display: flex;
+  gap: 12px;
+}
+
+#goalInput {
+  flex-grow: 1;
+  background: var(--bg-elevated);
+  border: 2px solid var(--border);
+  color: var(--text);
+  border-radius: 12px;
+  padding: 14px 16px;
+  font-size: 1em;
+  transition: all 0.3s ease;
+  font-family: "Montserrat", sans-serif;
+}
+
+#goalInput:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 20px var(--primary-glow);
+  background: var(--bg-card);
+}
+
+#goalInput::placeholder {
+  color: var(--text-secondary);
+}
+
+#addGoal {
+  background: linear-gradient(135deg, var(--secondary), var(--secondary-dark));
+  color: white;
+  box-shadow: 0 0 20px var(--secondary-glow);
+  font-size: 1.6em;
+  width: 52px;
+  height: 52px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#addGoal:hover {
+  transform: rotate(90deg) scale(1.1);
+  box-shadow: 0 0 30px var(--secondary-glow);
+}
+
+.empty-state {
+  color: var(--text-secondary);
+  text-align: center;
+  padding: 24px 0;
+  font-style: italic;
+}
+
+/* Skeleton Loading */
+.skeleton {
+  background: linear-gradient(90deg, var(--bg-elevated) 25%, var(--bg-card) 50%, var(--bg-elevated) 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+  border-radius: 8px;
+}
+
+@keyframes loading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.skeleton-article {
+  display: flex;
+  gap: 18px;
+  padding: 16px;
+  background: var(--bg-elevated);
+  border-radius: 14px;
+  margin-bottom: 16px;
+}
+
+.skeleton-img {
+  width: 90px;
+  height: 90px;
+  min-width: 90px;
+}
+
+.skeleton-text-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.skeleton-line {
+  height: 14px;
+}
+
+.skeleton-card {
+  height: 300px;
+  border-radius: 14px;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  h1 {
+    font-size: 2em;
+    letter-spacing: 2px;
+  }
+  
+  .card {
+    padding: 24px;
+  }
+  
+  .media-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .article-item {
+    flex-direction: column;
+  }
+  
+  .article-img {
+    width: 100%;
+    height: 200px;
+    min-width: unset;
+  }
+  
+  .goal-controls {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .progress-slider {
+    width: 100%;
+  }
+}
+
+    </style>
+</head>
+<body>
+
+    <main class="container">
+        <header>
+            <h1>Motivation Hub</h1>
+            <p class="subtitle">Inspired by "100 Ways to Motivate Yourself"</p>
+        </header>
+
+        <section id="advice" class="card">
+            <h2>Quote of the Day</h2>
+            <p id="adviceText">Click the button below for a piece of advice...</p>
+            <button id="newAdvice">Get New Advice</button>
+        </section>
+
+        <!-- NEW: Trending Articles Section -->
+        <section id="trending-articles" class="card">
+            <h2>Trending Articles</h2>
+            <div id="articleGrid" class="article-grid">
+                 <!-- Skeletons will be injected here by JS -->
+            </div>
+        </section>
+
+
+        <section id="inspiration" class="card">
+            <h2>Inspiration Station</h2>
+            
+            <div class="media-filter">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="video">Videos</button>
+                <button class="filter-btn" data-filter="podcast">Podcasts</button>
+                <button class="filter-btn" data-filter="compilation">Compilations</button>
+                <button class="filter-btn" data-filter="quotes">Quotes</button>
+                <button class="filter-btn" data-filter="interviews">Interviews</button>
+                <button class="filter-btn" data-filter="morning">Morning Motivation</button>
+                <button class="filter-btn" data-filter="business">Business Motivation</button>
+                <button class="filter-btn" data-filter="gym">Gym Motivation</button>
+                <button class="filter-btn" data-filter="wisdom">Wisdom & Philosophy</button>
+                <button class="filter-btn" data-filter="celebrities">Celebrities</button>
+            </div>
+
+            <div id="mediaGrid" class="media-grid">
+                <!-- Skeletons will be injected here by JS -->
+            </div>
+        </section>
+
+        <section id="goals" class="card">
+            <h2>My Objectives</h2>
+            <div id="progressContainer">
+                <p>Overall Progress:</p>
+                <div class="progress-bar-wrapper">
+                    <div id="progressBar"></div>
+                </div>
+                <div id="progressPercentage">0%</div>
+            </div>
+            <ul id="goalList"></ul>
+            <div class="goal-input-container">
+                <input id="goalInput" type="text" placeholder="Add a new objective..." />
+                <button id="addGoal" aria-label="Add Goal">+</button>
+            </div>
+        </section>
+        
+    </main>
+
+    <script>
+document.addEventListener("DOMContentLoaded", () => {
+  // --- DOM Elements ---
+  const adviceTextEl = document.getElementById("adviceText");
+  const newAdviceBtn = document.getElementById("newAdvice");
+
+  // Article Elements
+  const articleGrid = document.getElementById("articleGrid");
+  
+  // Media Elements
+  const mediaGrid = document.getElementById("mediaGrid");
+  const filterBtns = document.querySelectorAll(".filter-btn");
+
+  // Goal Elements
+  const goalInput = document.getElementById("goalInput");
+  const addGoalBtn = document.getElementById("addGoal");
+  const goalListEl = document.getElementById("goalList");
+  const progressPercentageEl = document.getElementById("progressPercentage");
+  const progressBarEl = document.getElementById("progressBar");
+
+  // --- State Management ---
+  const GOALS_STORAGE_KEY = "motivation_platform_goals";
+  let goals = [];
+  
+  // --- Mock Data ---
+  const MOCK_ARTICLES_DATA = [
+      {
+          source: { name: "Quora" },
+          title: "What are some effective ways to get motivated? Can motivational quotes help with this?",
+          url: "https://www.quora.com/What-are-some-effective-ways-to-get-motivated-Can-motivational-quotes-help-with-this",
+          urlToImage: "https://fiverr-res.cloudinary.com/images/q_auto,f_auto/gigs/199179772/original/bee070c66cf7ad652a057b0adf0e8f12dc81c658/make-a-attractive-motivational-thumbnails.jpg"
+      },
+      {
+          source: { name: "Educated Minds" },
+          title: "top 50 david goggins quotes",
+          url: "https://www.educatedminds1.com/50-david-goggins-quotes-to-help-fuel-your-unstoppable-mindset/",
+          urlToImage: "https://i.pinimg.com/736x/8d/4e/4b/8d4e4b53014cd9ec47c9b78812431221.jpg"
+      },
+      {
+          source: { name: "hbr" },
+          title: "How to Keep Working When You’re Just Not Feeling It",
+          url: "https://hbr.org/2018/11/how-to-keep-working-when-youre-just-not-feeling-it",
+          urlToImage: "https://hbr.org/resources/images/article_assets/2018/10/R1806L_SCHNEIDER.png"
+      }
+  ];
+
+  const MOCK_MEDIA_DATA = [
+      {
+          id: 1, type: 'video', tags: ['video', 'gym', 'celebrities'], title: "David Goggins: Taking Souls & Suffering", thumbnail: "https://i.pinimg.com/736x/8f/27/62/8f276251a9e74551ef1ad93bb9119363.jpg", url: "https://www.youtube.com/watch?v=I5X1vO_Jlrk"
+      },
+      {
+          id: 2, type: 'video', tags: ['video', 'compilation', 'morning'], title: "THE MENTALITY | Best Motivational Speech", thumbnail: "https://i.pinimg.com/736x/f3/4c/e3/f34ce361626f1987139254ba3e64a4aa.jpg", url: "https://www.youtube.com/watch?v=CD7Q3B1Y9-s"
+      },
+      {
+          id: 3, type: 'podcast', tags: ['podcast', 'wisdom', 'interviews'], title: "Huberman Lab: Mastering Willpower", thumbnail: "https://i.ytimg.com/vi/hFL6qRIJZ_Y/hqdefault.jpg", url: "https://www.youtube.com/watch?v=hFL6qRIJZ_Y"
+      },
+      {
+          id: 4, type: 'podcast', tags: ['podcast', 'gym', 'wisdom'], title: "Jocko Podcast: Discipline Equals Freedom", thumbnail: "https://mpd-biblio-covers.imgix.net/9781250274434.jpg?w=900&dpr=1", url: "https://www.youtube.com/watch?v=J3Gg9_f5C2c"
+      },
+      {
+          id: 5, type: 'video', tags: ['video', 'quotes', 'wisdom'], title: "Sun Tzu's Quotes that are Worth Listening To", thumbnail: "https://i.pinimg.com/1200x/33/53/c6/3353c62d03a26a5c96ac9e0c830a1480.jpg", url: "https://youtu.be/jxcMRkqaQdw"
+      },
+      {
+          id: 6, type: 'video', tags: ['video', 'business', 'interviews', 'celebrities'], title: "Steve Jobs on the Rules for Success", thumbnail: "https://i.ytimg.com/vi/eHzAtxW3TzY/hqdefault.jpg", url: "https://www.youtube.com/watch?v=eHzAtxW3TzY"
+      }
+  ];
+
+  // --- Functions ---
+
+  const fetchAdvice = async () => {
+    adviceTextEl.textContent = "Loading...";
+    try {
+      const response = await fetch("https://api.adviceslip.com/advice");
+      if (!response.ok) throw new Error("Network response was not ok");
+      const data = await response.json();
+      adviceTextEl.textContent = data.slip.advice;
+    } catch (error) {
+      console.error("Failed to fetch advice:", error);
+      adviceTextEl.textContent = "Could not fetch advice. Please try again later.";
+    }
+  };
+
+  const fetchArticles = async () => {
+      articleGrid.innerHTML = `
+        <div class="skeleton-article">
+            <div class="skeleton skeleton-img"></div>
+            <div class="skeleton-text-container">
+                <div class="skeleton skeleton-line" style="width: 30%"></div>
+                <div class="skeleton skeleton-line" style="width: 90%"></div>
+                <div class="skeleton skeleton-line" style="width: 75%"></div>
+            </div>
+        </div>
+      `.repeat(3);
+
+      await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate loading
+      
+      try {
+        // In a real app, this would be an API call like:
+        // const response = await fetch("https://newsapi.org/v2/everything?q=motivation&apiKey=YOUR_KEY");
+        // const data = await response.json();
+        // const articles = data.articles;
+        const articles = MOCK_ARTICLES_DATA;
+
+        articleGrid.innerHTML = "";
+        articles.forEach(article => {
+            const articleEl = document.createElement("a");
+            articleEl.className = "article-item";
+            articleEl.href = article.url;
+            articleEl.target = "_blank";
+            
+            // Fallback for missing images
+            const imageUrl = article.urlToImage || 'https://via.placeholder.com/80x80/6366f1/ffffff?text=:-) ';
+
+            articleEl.innerHTML = `
+                <img src="${imageUrl}" alt="${article.title}" class="article-img">
+                <div class="article-content">
+                    <p class="article-source">${article.source.name}</p>
+                    <h3 class="article-title">${article.title}</h3>
+                </div>
+            `;
+            articleGrid.appendChild(articleEl);
+        });
+
+      } catch(error) {
+        console.error("Failed to fetch articles", error);
+        articleGrid.innerHTML = '<p class="empty-state">Could not load articles.</p>';
+      }
+  };
+
+
+  const fetchMedia = async (filter = 'all') => {
+      mediaGrid.innerHTML = '<div class="skeleton skeleton-card"></div><div class="skeleton skeleton-card"></div>';
+      
+      await new Promise(resolve => setTimeout(resolve, 800));
+
+      const filteredData = filter === 'all' 
+        ? MOCK_MEDIA_DATA 
+        : MOCK_MEDIA_DATA.filter(item => item.tags.includes(filter));
+
+      mediaGrid.innerHTML = '';
+      if(filteredData.length > 0){
+          filteredData.forEach(item => {
+              const card = document.createElement('a');
+              card.href = item.url;
+              card.target = "_blank";
+              card.className = "media-item";
+              
+              card.innerHTML = `
+                <div class="thumbnail-wrapper">
+                    <img src="${item.thumbnail}" alt="${item.title}" class="thumbnail-img" loading="lazy">
+                    <div class="play-icon"></div>
+                </div>
+                <div class="media-content">
+                    <span class="media-tag">${item.type}</span>
+                    <h3 class="media-title">${item.title}</h3>
+                </div>
+              `;
+              mediaGrid.appendChild(card);
+          });
+      } else {
+           mediaGrid.innerHTML = '<p class="empty-state">No items found for this category.</p>'
+      }
+  };
+
+  const loadGoals = () => {
+      try {
+        const stored = localStorage.getItem(GOALS_STORAGE_KEY);
+        goals = JSON.parse(stored || "[]").map((goal) => {
+            if (typeof goal.done !== "undefined") {
+                return { id: goal.id, text: goal.text, progress: goal.done ? 100 : 0 };
+            }
+            return goal;
+        });
+      } catch (e) { goals = []; }
+      renderGoals();
+  }
+
+  const saveGoals = () => localStorage.setItem(GOALS_STORAGE_KEY, JSON.stringify(goals));
+
+  const renderProgress = () => {
+    if (goals.length === 0) {
+      progressPercentageEl.textContent = "0%";
+      progressBarEl.style.width = "0%";
+      return;
+    }
+    const totalProgress = goals.reduce((sum, goal) => sum + (goal.progress || 0), 0);
+    const percentage = Math.round(totalProgress / goals.length);
+
+    progressPercentageEl.textContent = `${percentage}%`;
+    progressBarEl.style.width = `${percentage}%`;
+  };
+
+  const renderGoals = () => {
+    goalListEl.innerHTML = "";
+
+    if (goals.length === 0) {
+      goalListEl.innerHTML = '<li class="empty-state">No objectives yet. Add one below!</li>';
+    } else {
+      goals.forEach((goal) => {
+        const li = document.createElement("li");
+        li.className = (goal.progress || 0) === 100 ? "completed" : "";
+        li.dataset.id = goal.id;
+
+        const goalInfo = document.createElement("div");
+        goalInfo.className = "goal-info";
+        const span = document.createElement("span");
+        span.textContent = goal.text;
+        goalInfo.appendChild(span);
+
+        const goalControls = document.createElement("div");
+        goalControls.className = "goal-controls";
+
+        const slider = document.createElement("input");
+        slider.type = "range"; slider.min = 0; slider.max = 100; slider.value = goal.progress || 0; slider.className = "progress-slider";
+        const progressLabel = document.createElement("span");
+        progressLabel.className = "progress-label"; progressLabel.textContent = `${slider.value}%`;
+        slider.addEventListener("input", () => { progressLabel.textContent = `${slider.value}%`; });
+        slider.addEventListener("change", () => { updateGoalProgress(goal.id, slider.value); });
+        const deleteBtn = document.createElement("button");
+        deleteBtn.className = "delete-btn"; deleteBtn.innerHTML = "&times;"; deleteBtn.addEventListener("click", () => deleteGoal(goal.id));
+
+        goalControls.appendChild(slider);
+        goalControls.appendChild(progressLabel);
+        goalControls.appendChild(deleteBtn);
+        li.appendChild(goalInfo);
+        li.appendChild(goalControls);
+        goalListEl.appendChild(li);
+      });
+    }
+    renderProgress();
+  };
+
+  const addNewGoal = () => {
+    const text = goalInput.value.trim();
+    if (text) {
+      const newGoal = { id: Date.now(), text: text, progress: 0 };
+      goals.push(newGoal);
+      goalInput.value = "";
+      saveGoals();
+      renderGoals();
+    }
+  };
+
+  const updateGoalProgress = (id, progress) => {
+    const goal = goals.find((g) => g.id === id);
+    if (goal) {
+      goal.progress = parseInt(progress, 10);
+      saveGoals();
+      renderGoals();
+    }
+  };
+
+  const deleteGoal = (id) => {
+    goals = goals.filter((g) => g.id !== id);
+    saveGoals();
+    renderGoals();
+  };
+
+  // --- Event Listeners ---
+  newAdviceBtn.addEventListener("click", fetchAdvice);
+  addGoalBtn.addEventListener("click", addNewGoal);
+  goalInput.addEventListener("keypress", (e) => { if (e.key === "Enter") addNewGoal(); });
+  
+  filterBtns.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+          filterBtns.forEach(b => b.classList.remove('active'));
+          e.target.classList.add('active');
+          fetchMedia(e.target.dataset.filter);
+      });
+  });
+
+  // --- Initial Load ---
+  fetchAdvice();
+  fetchArticles();
+  fetchMedia();
+  loadGoals();
+});
+    </script>
+</body>
+</html>
