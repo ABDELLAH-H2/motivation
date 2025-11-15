@@ -225,6 +225,7 @@
         background: rgba(255, 255, 255, 0.2);
         transform: translate(-50%, -50%);
         transition: width 0.6s, height 0.6s;
+        pointer-events: none;
       }
 
       button:hover::before {
@@ -637,6 +638,7 @@
       .goal-input-container {
         display: flex;
         gap: 12px;
+        align-items: flex-end;
       }
 
       #goalInput {
@@ -649,6 +651,7 @@
         font-size: 1em;
         transition: all 0.3s ease;
         font-family: "Montserrat", sans-serif;
+        width: 100%;
       }
 
       #goalInput:focus {
@@ -659,6 +662,30 @@
       }
 
       #goalInput::placeholder {
+        color: var(--text-secondary);
+      }
+
+      #goalDescription {
+        background: var(--bg-elevated);
+        border: 2px solid var(--border);
+        color: var(--text);
+        border-radius: 12px;
+        padding: 12px 14px;
+        font-size: 0.9em;
+        transition: all 0.3s ease;
+        font-family: "Montserrat", sans-serif;
+        resize: vertical;
+        min-height: 60px;
+      }
+
+      #goalDescription:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 20px var(--primary-glow);
+        background: var(--bg-card);
+      }
+
+      #goalDescription::placeholder {
         color: var(--text-secondary);
       }
 
@@ -750,6 +777,88 @@
         padding: 4px 6px;
         border-radius: 6px;
         display: inline-block;
+      }
+
+      /* Description Container Styles */
+      .goal-description-container {
+        margin-top: 12px;
+        padding: 12px 14px;
+        background: linear-gradient(135deg, rgba(6, 182, 212, 0.08), rgba(139, 92, 246, 0.08));
+        border-left: 4px solid var(--primary);
+        border-radius: 8px;
+        border: 1px solid rgba(6, 182, 212, 0.2);
+        transition: all 0.3s ease;
+      }
+
+      .goal-description-container:hover {
+        border-color: var(--primary);
+        box-shadow: 0 0 16px rgba(6, 182, 212, 0.15);
+      }
+
+      .goal-description-text {
+        font-size: 0.95em;
+        color: var(--text-secondary);
+        line-height: 1.5;
+        word-break: break-word;
+        cursor: pointer;
+        padding: 2px 4px;
+        border-radius: 4px;
+        transition: all 0.2s ease;
+        flex: 1;
+      }
+
+      .goal-description-text:hover {
+        color: var(--text);
+        background: rgba(6, 182, 212, 0.1);
+        padding: 4px 6px;
+      }
+
+      .goal-description-text[contenteditable="true"] {
+        outline: 2px solid var(--primary);
+        outline-offset: -2px;
+        background: var(--bg-card);
+        color: var(--text);
+        padding: 6px 8px;
+      }
+
+      /* Alert Styles */
+      .alert-container {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: linear-gradient(135deg, var(--secondary), var(--secondary-dark));
+        color: white;
+        padding: 16px 24px;
+        border-radius: 12px;
+        box-shadow: 0 8px 32px rgba(236, 72, 153, 0.4);
+        animation: slideInRight 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 1000;
+        max-width: 90%;
+        word-wrap: break-word;
+        font-weight: 600;
+        border-left: 4px solid rgba(255, 255, 255, 0.3);
+      }
+
+      @keyframes slideInRight {
+        from {
+          opacity: 0;
+          transform: translateX(100px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+
+      @keyframes slideOutRight {
+        from {
+          opacity: 1;
+          transform: translateX(0);
+        }
+        to {
+          opacity: 0;
+          transform: translateX(100px);
+        }
       }
 
       /* Restore (trash) styles */
@@ -875,12 +984,30 @@
         </div>
         <ul id="goalList"></ul>
         <div class="goal-input-container">
-          <input
-            id="goalInput"
-            type="text"
-            placeholder="Add a new objective..."
-          />
-          <button id="addGoal" aria-lclassabel="Add Goal">+</button>
+          <div style="flex: 1">
+            <input
+              id="goalInput"
+              type="text"
+              placeholder="Add a new objective..."
+              style="width: 100%; margin-bottom: 10px"
+            />
+            <textarea
+              id="goalDescription"
+              placeholder="Add a description (optional)..."
+              style="
+                width: 100%;
+                height: 70px;
+                padding: 10px;
+                border-radius: 8px;
+                background: var(--bg-elevated);
+                border: 1px solid var(--border);
+                color: var(--text);
+                font-family: 'Montserrat', sans-serif;
+                resize: vertical;
+              "
+            ></textarea>
+          </div>
+          <button id="addGoal" aria-label="Add Goal">+</button>
         </div>
         <!-- Restore area for recently deleted objectives -->
         <div id="restoreContainer">
@@ -928,6 +1055,7 @@
 
         // Goal Elements
         const goalInput = document.getElementById("goalInput");
+        const goalDescription = document.getElementById("goalDescription");
         const addGoalBtn = document.getElementById("addGoal");
         const goalListEl = document.getElementById("goalList");
         const progressPercentageEl =
@@ -995,6 +1123,49 @@
 
             spanEl.addEventListener("keydown", onKey);
             spanEl.addEventListener("blur", onBlur);
+          }
+
+          enableDescriptionEditing(descDiv, goalId) {
+            if (!descDiv) return;
+            descDiv.setAttribute("contenteditable", "true");
+            descDiv.classList.add("editable");
+            descDiv.style.backgroundColor = "var(--bg-card)";
+            
+            // Move caret to end
+            const range = document.createRange();
+            const sel = window.getSelection();
+            range.selectNodeContents(descDiv);
+            range.collapse(false);
+            sel.removeAllRanges();
+            sel.addRange(range);
+
+            const onKey = (e) => {
+              if (e.key === "Escape") {
+                // revert
+                const g = this.getGoals().find((g) => g.id === goalId);
+                descDiv.textContent = g ? g.description : "";
+                descDiv.blur();
+              }
+            };
+
+            const onBlur = () => {
+              descDiv.removeAttribute("contenteditable");
+              descDiv.classList.remove("editable");
+              descDiv.style.backgroundColor = "";
+              descDiv.removeEventListener("keydown", onKey);
+              descDiv.removeEventListener("blur", onBlur);
+
+              const newDescription = descDiv.textContent.trim();
+              const goal = this.getGoals().find((g) => g.id === goalId);
+              if (goal && goal.description !== newDescription) {
+                goal.description = newDescription;
+                this.save();
+                this.render();
+              }
+            };
+
+            descDiv.addEventListener("keydown", onKey);
+            descDiv.addEventListener("blur", onBlur);
           }
         }
 
@@ -1086,7 +1257,10 @@
         const fetchAdvice = async () => {
           adviceTextEl.textContent = "Loading...";
           try {
-            const response = await fetch("https://api.adviceslip.com/advice");
+            // Use cache-busting parameter to ensure we get different quotes
+            const response = await fetch(
+              `https://api.adviceslip.com/advice?cache=${Date.now()}`
+            );
             if (!response.ok) throw new Error("Network response was not ok");
             const data = await response.json();
             adviceTextEl.textContent = data.slip.advice;
@@ -1267,6 +1441,41 @@
 
               goalInfo.appendChild(infoWrapper);
 
+              // Add description if it exists (with edit capability)
+              if (goal.description) {
+                const descContainer = document.createElement("div");
+                descContainer.className = "goal-description-container";
+                
+                const descDiv = document.createElement("div");
+                descDiv.className = "goal-description-text";
+                descDiv.textContent = goal.description;
+                descDiv.title = "Double-click to edit description";
+                
+                // Allow double-click to edit description
+                descDiv.addEventListener("dblclick", () => {
+                  if (objectiveEditor)
+                    objectiveEditor.enableDescriptionEditing(descDiv, goal.id);
+                });
+                
+                // Description edit button
+                const descEditBtn = document.createElement("button");
+                descEditBtn.className = "filter-btn";
+                descEditBtn.style.cssText = "padding: 4px 8px; font-size: 0.7em; min-width: 30px; margin-left: 8px;";
+                descEditBtn.textContent = "✏️ Edit Desc";
+                descEditBtn.addEventListener("click", () => {
+                  if (objectiveEditor)
+                    objectiveEditor.enableDescriptionEditing(descDiv, goal.id);
+                });
+                
+                const descHeaderDiv = document.createElement("div");
+                descHeaderDiv.style.cssText = "display: flex; align-items: center; gap: 8px; margin-top: 10px;";
+                descHeaderDiv.appendChild(descDiv);
+                descHeaderDiv.appendChild(descEditBtn);
+                
+                descContainer.appendChild(descHeaderDiv);
+                goalInfo.appendChild(descContainer);
+              }
+
               const goalControls = document.createElement("div");
               goalControls.className = "goal-controls";
 
@@ -1412,12 +1621,27 @@
 
         const addNewGoal = () => {
           const text = goalInput.value.trim();
+          const description = goalDescription.value.trim();
           if (text) {
-            const newGoal = { id: Date.now(), text: text, progress: 0 };
+            const newGoal = {
+              id: Date.now(),
+              text: text,
+              description: description || "",
+              progress: 0,
+            };
             goals.push(newGoal);
             goalInput.value = "";
+            goalDescription.value = "";
             saveGoals();
             renderGoals();
+            console.log(
+              "New goal added:",
+              newGoal,
+              "Total goals:",
+              goals.length
+            );
+          } else {
+            console.log("Goal input is empty");
           }
         };
 
@@ -1431,8 +1655,15 @@
         };
 
         const deleteGoal = (id) => {
-          // find and save the deleted goal to allow restore
+          // Show confirmation alert
           const goalToDelete = goals.find((g) => g.id === id);
+          const goalText = goalToDelete ? goalToDelete.text : "this objective";
+
+          if (!confirm(`Are you sure you want to delete "${goalText}"?`)) {
+            return; // User cancelled the deletion
+          }
+
+          // find and save the deleted goal to allow restore
           if (goalToDelete) {
             // clone to avoid mutating any in-memory references
             const clonedGoal = Object.assign({}, goalToDelete);
@@ -1444,15 +1675,32 @@
             }
             saveTrash();
             showRestore();
+            showStyledAlert(`"${goalText}" moved to trash`, 3000);
           }
           goals = goals.filter((g) => g.id !== id);
           saveGoals();
           renderGoals();
         };
 
+        // Helper function to show styled alerts
+        const showStyledAlert = (message, duration = 3000) => {
+          const alertDiv = document.createElement("div");
+          alertDiv.className = "alert-container";
+          alertDiv.textContent = message;
+          document.body.appendChild(alertDiv);
+
+          setTimeout(() => {
+            alertDiv.style.animation = "slideOutRight 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards";
+            setTimeout(() => {
+              alertDiv.remove();
+            }, 400);
+          }, duration);
+        };
+
         // --- Event Listeners ---
         newAdviceBtn.addEventListener("click", fetchAdvice);
         addGoalBtn.addEventListener("click", addNewGoal);
+        console.log("Add goal button listener attached", addGoalBtn);
         goalInput.addEventListener("keypress", (e) => {
           if (e.key === "Enter") addNewGoal();
         });
