@@ -882,13 +882,31 @@
           />
           <button id="addGoal" aria-lclassabel="Add Goal">+</button>
         </div>
-        <!-- Restore area for recently deleted objective -->
+        <!-- Restore area for recently deleted objectives -->
         <div id="restoreContainer">
           <div id="restoreBox">
-            <span id="restoreText"></span>
-            <button id="restoreBtn" class="filter-btn">Restore</button>
-            <button id="clearTrashBtn" class="filter-btn" title="Clear">
-              ×
+            <p
+              style="
+                margin: 0 0 10px 0;
+                color: var(--text-secondary);
+                font-size: 0.9em;
+                font-weight: 600;
+              "
+            >
+              Recently Deleted:
+            </p>
+            <ul
+              id="trashList"
+              style="
+                list-style: none;
+                padding: 0;
+                margin: 0 0 10px 0;
+                max-height: 200px;
+                overflow-y: auto;
+              "
+            ></ul>
+            <button id="clearTrashBtn" class="filter-btn" style="width: 100%">
+              Clear All Trash
             </button>
           </div>
         </div>
@@ -1292,33 +1310,60 @@
 
         // --- Trash / Restore for deleted objectives ---
         const TRASH_STORAGE_KEY = "motivation_platform_trash";
-        let lastDeleted = null;
+        let deletedObjectives = []; // array to hold multiple deleted objectives
         const restoreContainer = document.getElementById("restoreContainer");
-        const restoreText = document.getElementById("restoreText");
-        const restoreBtn = document.getElementById("restoreBtn");
+        const trashList = document.getElementById("trashList");
         const clearTrashBtn = document.getElementById("clearTrashBtn");
         let restoreTimer = null;
+        const MAX_TRASH_ITEMS = 10; // limit trash to 10 items
 
         const saveTrash = () => {
-          if (lastDeleted) {
-            localStorage.setItem(
-              TRASH_STORAGE_KEY,
-              JSON.stringify(lastDeleted)
-            );
-          } else {
-            localStorage.removeItem(TRASH_STORAGE_KEY);
+          localStorage.setItem(
+            TRASH_STORAGE_KEY,
+            JSON.stringify(deletedObjectives)
+          );
+        };
+
+        const renderTrashList = () => {
+          trashList.innerHTML = "";
+          if (deletedObjectives.length === 0) {
+            restoreContainer.style.display = "none";
+            return;
           }
+          restoreContainer.style.display = "block";
+          deletedObjectives.forEach((item, index) => {
+            const li = document.createElement("li");
+            li.style.cssText =
+              "display: flex; align-items: center; gap: 8px; padding: 8px; margin-bottom: 6px; background: var(--bg-card); border-radius: 8px; border: 1px solid var(--border);";
+
+            const text = document.createElement("span");
+            text.textContent = item.text;
+            text.style.cssText =
+              "flex: 1; font-size: 0.9em; color: var(--text-secondary);";
+
+            const restoreBtn = document.createElement("button");
+            restoreBtn.className = "filter-btn";
+            restoreBtn.style.cssText =
+              "padding: 4px 12px; font-size: 0.75em; min-width: auto;";
+            restoreBtn.textContent = "↶ Restore";
+            restoreBtn.addEventListener("click", () => {
+              restoreObjective(index);
+            });
+
+            li.appendChild(text);
+            li.appendChild(restoreBtn);
+            trashList.appendChild(li);
+          });
         };
 
         const showRestore = () => {
-          if (!restoreContainer || !lastDeleted) return;
-          restoreText.textContent = `Recently deleted: "${lastDeleted.text}"`;
-          restoreContainer.style.display = "block";
-          // auto-clear after 10s
+          if (!restoreContainer) return;
+          renderTrashList();
+          // auto-clear after 15s
           if (restoreTimer) clearTimeout(restoreTimer);
           restoreTimer = setTimeout(() => {
             clearTrash();
-          }, 10000);
+          }, 15000);
         };
 
         const hideRestore = () => {
@@ -1327,7 +1372,7 @@
         };
 
         const clearTrash = () => {
-          lastDeleted = null;
+          deletedObjectives = [];
           saveTrash();
           hideRestore();
           if (restoreTimer) {
@@ -1336,29 +1381,33 @@
           }
         };
 
-        const restoreLastDeleted = () => {
-          if (!lastDeleted) return;
+        const restoreObjective = (index) => {
+          if (index < 0 || index >= deletedObjectives.length) return;
+          const restoredGoal = deletedObjectives[index];
           // re-add to goals
-          goals.push(lastDeleted);
+          goals.push(restoredGoal);
+          // remove from trash
+          deletedObjectives.splice(index, 1);
           saveGoals();
+          saveTrash();
           renderGoals();
-          clearTrash();
+          renderTrashList();
         };
 
         const loadTrash = () => {
           try {
             const t = localStorage.getItem(TRASH_STORAGE_KEY);
             if (t) {
-              lastDeleted = JSON.parse(t);
-              showRestore();
+              deletedObjectives = JSON.parse(t);
+              if (deletedObjectives.length > 0) {
+                showRestore();
+              }
             }
           } catch (e) {
-            lastDeleted = null;
+            deletedObjectives = [];
           }
         };
 
-        if (restoreBtn)
-          restoreBtn.addEventListener("click", restoreLastDeleted);
         if (clearTrashBtn) clearTrashBtn.addEventListener("click", clearTrash);
 
         const addNewGoal = () => {
@@ -1386,7 +1435,13 @@
           const goalToDelete = goals.find((g) => g.id === id);
           if (goalToDelete) {
             // clone to avoid mutating any in-memory references
-            lastDeleted = Object.assign({}, goalToDelete);
+            const clonedGoal = Object.assign({}, goalToDelete);
+            // add to front of trash array (most recent first)
+            deletedObjectives.unshift(clonedGoal);
+            // keep only the last MAX_TRASH_ITEMS
+            if (deletedObjectives.length > MAX_TRASH_ITEMS) {
+              deletedObjectives = deletedObjectives.slice(0, MAX_TRASH_ITEMS);
+            }
             saveTrash();
             showRestore();
           }
